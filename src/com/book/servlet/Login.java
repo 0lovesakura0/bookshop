@@ -1,6 +1,7 @@
 package com.book.servlet;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -46,10 +47,22 @@ public class Login extends HttpServlet {
 			MD5 dm5 =new MD5();
 			String password = dm5.getMD5ofStr(request.getParameter("password"));
 			
-			String sql = "select * from user where name = ? and password = ?";
+			String sql = "select * from user where name = ?";
 			DB db =new DB();
-			db.executeQuery(sql, username,password);
-			response.getWriter().append("登陆成功！");
+			ResultSet rs = db.executeQuery(sql, username);
+			if(rs.next()==false){
+				response.getWriter().append("沒有该用戶，請註冊！");
+				return ;
+			}else{
+				String sql1 = "select * from user where name = ? and password = ?";
+				DB dbq =new DB();
+				ResultSet rs1 = db.executeQuery(sql1,username,password);
+				if(rs1.next()==false){
+					response.getWriter().append("密码输入错误，请重新输入！");
+					return ;
+				}
+				response.getWriter().append("登陆成功！");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
