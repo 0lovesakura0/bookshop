@@ -9,11 +9,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.book.dao.DB;
 import com.book.util.MD5;
 
 /**
+ * 登录方法
  * Servlet implementation class Login
  */
 @WebServlet("/Login")
@@ -61,12 +63,17 @@ public class Login extends HttpServlet {
 					response.getWriter().append("密码输入错误，请重新输入！");
 					return ;
 				}
-				response.getWriter().append("登陆成功！");
+				
+				HttpSession sess=request.getSession();
+				sess.setAttribute("LoginUser", username);
+				request.setAttribute("msg", "登录成功");
+				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			response.getWriter().append("登陆失败！");
+			request.setAttribute("msg", "登录失败"+e.getMessage());
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		}
 	}
 

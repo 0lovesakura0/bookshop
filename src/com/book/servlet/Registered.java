@@ -19,8 +19,8 @@ public class Registered extends HttpServlet {
 		// TODO Auto-generated method stub
 		resp.setHeader("Content-type", "text/html;charset=UTF-8");
 		// PrintWriter ob = resp.getWriter();
-
-		resp.getWriter().append("这是注册请求");
+		doPost(req, resp);
+//		resp.getWriter().append("这是注册请求");
 	}
 
 	@Override
@@ -41,7 +41,8 @@ public class Registered extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			resp.getWriter().append("注册失败！");
+			req.setAttribute("msg", "注册失败"+e.getMessage());
+			req.getRequestDispatcher("/index.jsp").forward(req, resp);
 		} 
 
 	}
