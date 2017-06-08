@@ -1,106 +1,268 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>jQuery实现加入购物车飞入动画效果</title>
+<style type="text/css">
+.demo {
+	width: 820px;
+	margin: 60px auto 10px auto
+}
 
-<script src="<%=request.getContextPath()%>/js/jquery-1.9.1.min.js"
-	type="text/javascript"></script>
-<link
-	href="<%=request.getContextPath()%>/scripts/miniui/themes/default/miniui.css"
-	rel="stylesheet" type="text/css" />
-<script src="<%=request.getContextPath()%>/scripts/miniui/miniui.js"
-	type="text/javascript"></script>
+.m-sidebar {
+	position: fixed;
+	top: 0;
+	right: 0;
+	background: #000;
+	z-index: 2000;
+	width: 35px;
+	height: 100%;
+	font-size: 12px;
+	color: #fff;
+}
 
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>书城首页</title>
-</head>
-<body>
-	<div style="padding-bottom: 5px;">
-		<span>书籍名称：</span> <input type="text" id="key" /> <input
-			type="button" value="查找" onclick="search()" />
-	</div>
-	<div style="width: 100%;">
-		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;">
-			<table style="width: 100%;">
-				<tr>
-					<td style="width: 100%;"><a class="mini-button"
-						iconCls="icon-add" onclick="addRow()" plain="true" tooltip="增加...">增加</a>
-						<a class="mini-button" iconCls="icon-remove" onclick="removeRow()"
-						plain="true">删除</a> <span class="separator"></span> <a
-						class="mini-button" iconCls="icon-save" onclick="saveData()"
-						plain="true">保存</a></td>
-					<td style="white-space: nowrap;"><input id="key"
-						class="mini-textbox" emptyText="请输入书籍名称" style="width: 150px;"
-						onenter="onKeyEnter" /> <a class="mini-button" onclick="search()">查询</a>
-					</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div id="datagrid1" class="mini-datagrid"
-		style="width:100%; height: 580px;" url="BookList" idField="id"
-		allowResize="true" pageSize="20" allowCellEdit="true"
-		allowCellSelect="true" multiSelect="true" editNextOnEnterKey="true"
-		editNextRowCell="true">
-		<div property="columns">
-			<div type="indexcolumn"></div>
-			<div type="checkcolumn"></div>
-			
-			<div field="name" width="120" headerAlign="center" allowSort="true">书籍名称</div>
-			<div field="type" width="100" renderer="onGenderRenderer"
-				align="center" headerAlign="center">类别</div>
-			<div field="price" numberFormat="¥#,0.00" align="right" width="100"
-				allowSort="true">价格</div>
-			<div field="author" width="100" allowSort="true" decimalPlaces="2"
-				dataType="float">作者</div>
-			<div field="number" width="100" allowSort="true" decimalPlaces="2"
-				dataType="float">书籍编号</div>
-			<div field="content" width="100" allowSort="true" decimalPlaces="2"
-				dataType="float">详情</div>
-			<div field="content" width="100" allowSort="true" decimalPlaces="2"
-				dataType="float">操作</div>
-		</div>
-	</div>
-</body>
+.cart {
+	color: #fff;
+	text-align: center;
+	line-height: 20px;
+	padding: 200px 0 0 0px;
+}
 
-<script type="text/javascript">
-	$(function() {
-		mini.parse();
-		var grid = mini.get("datagrid1");
-		console.log("datagrid1");
-		grid.load();
-		function search() {
-			var key = document.getElementById("key").value;
+.cart span {
+	display: block;
+	width: 20px;
+	margin: 0 auto;
+}
 
-			grid.load({
-				key : key
+.cart i {
+	width: 35px;
+	height: 35px;
+	display: block;
+	background: url(car.png) no-repeat;
+}
 
-			});
-		}
-		$("#key").bind("keydown", function(e) {
-			if (e.keyCode == 13) {
-				search();
-				console.log(e)
+#msg {
+	position: fixed;
+	top: 300px;
+	right: 35px;
+	z-index: 10000;
+	width: 1px;
+	height: 52px;
+	line-height: 52px;
+	font-size: 20px;
+	text-align: center;
+	color: #fff;
+	background: #360;
+	display: none
+}
+
+.box {
+	float: left;
+	width: 198px;
+	height: 320px;
+	margin-left: 5px;
+	border: 1px solid #e0e0e0;
+	text-align: center
+}
+
+.box p {
+	line-height: 20px;
+	padding: 4px 4px 10px 4px;
+	text-align: left
+}
+
+.box:hover {
+	border: 1px solid #f90
+}
+
+.box h4 {
+	line-height: 32px;
+	font-size: 14px;
+	color: #f30;
+	font-weight: 500
+}
+
+.box h4 span {
+	font-size: 20px
+}
+
+.u-flyer {
+	display: block;
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	position: fixed;
+	z-index: 9999;
+}
+
+.button {
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	font: 16px/100% 'Microsoft yahei', Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+	-webkit-border-radius: .5em;
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+}
+
+.button:hover {
+	text-decoration: none;
+}
+
+.button:active {
+	position: relative;
+	top: 1px;
+}
+/* orange */
+.orange {
+	color: #fef4e9;
+	border: solid 1px #da7c0c;
+	background: #f78d1d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#faa51a),
+		to(#f47a20));
+	background: -moz-linear-gradient(top, #faa51a, #f47a20);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a',
+		endColorstr='#f47a20');
+}
+
+.orange:hover {
+	background: #f47c20;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f88e11),
+		to(#f06015));
+	background: -moz-linear-gradient(top, #f88e11, #f06015);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11',
+		endColorstr='#f06015');
+}
+
+.orange:active {
+	color: #fcd3a5;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f47a20),
+		to(#faa51a));
+	background: -moz-linear-gradient(top, #f47a20, #faa51a);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20',
+		endColorstr='#faa51a');
+}
+</style>
+<script type="text/javascript"
+	src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+<script src="jquery.fly.min.js"></script>
+<!--[if lte IE 9]>
+<script src="requestAnimationFrame.js"></script>
+<![endif]-->
+<script>
+$(function() {
+	var offset = $("#end").offset();  //结束的地方的元素
+	$(".addcar").click(function(event){   //是$(".addcar")这个元素点击促发的 开始动画的位置就是这个元素的位置为起点
+		var addcar = $(this);
+		var img = addcar.parent().find('img').attr('src');
+		var flyer = $('<img class="u-flyer" src="'+img+'">');
+		flyer.fly({
+			start: {
+				left: event.pageX,
+				top: event.pageY
+			},
+			end: {
+				left: offset.left+10,
+				top: offset.top+10,
+				width: 0,
+				height: 0
+			},
+			onEnd: function(){
+				$("#msg").show().animate({width: '250px'}, 200).fadeOut(1000);
+				addcar.css("cursor","default").removeClass('orange').unbind('click');
+				this.destory();
 			}
 		});
-		///////////////////////////////////////////////////////
-		var Genders = [ {
-			id : 1,
-			text : '男'
-		}, {
-			id : 2,
-			text : '女'
-		} ];
-		function onGenderRenderer(e) {
-			console.log(e)
-			for (var i = 0, l = Genders.length; i < l; i++) {
-				var g = Genders[i];
-				if (g.id == e.value)
-					return g.text;
-			}
-			return "";
-		}
-	})
+	});
+  
+});
 </script>
+</head>
+
+<body>
+	<div id="main">
+		<h2 class="top_title">书城首页</h2>
+		<div class="demo" id='demo' style="margin-top:-60px">
+			 <div class="box" style="padding-top:5px;margin-top:60px;" height="400px">
+				<img src="images/lg.jpg"  class="img" width="180" height="180">
+				<h4>
+					¥<span>3499.00</span>
+				</h4>
+				<p>LG 49LF5400-CA 49寸IPS硬屏富贵招财铜钱设计</p>
+				<a href="#" class="button orange addcar">加入购物车</a>
+			</div>
+			<!--
+			<div class="box">
+				<img src="images/hs.jpg" class="img" width="180" height="180">
+				<h4>
+					¥<span>3799.00</span>
+				</h4>
+				<p>Hisense/海信 LED50T1A 海信电视官方旗舰店</p>
+				<a href="#" class="button orange addcar">加入购物车</a>
+			</div>
+			<div class="box">
+				<img src="images/cw.jpg" class="img" width="180" height="180">
+				<h4>
+					¥<span>¥3999.00</span>
+				</h4>
+				<p>Skyworth/创维 50E8EUS 8核4Kj极清酷开系统智能液晶电视</p>
+				<a href="#" class="button orange addcar">加入购物车</a>
+			</div>
+			<div class="box">
+				<img src="images/ls.jpg" class="img" width="180" height="180">
+				<h4>
+					¥<span>6969.00</span>
+				</h4>
+				<p>乐视TV Letv X60S 4核1080P高清3D安卓智能超级电视</p>
+				<a href="#" class="button orange addcar">加入购物车</a>
+			</div> -->
+		</div>
+
+	</div>
+
+	<div class="m-sidebar">
+		<div class="cart">
+			<i id="end"></i> <span>购物车</span>
+		</div>
+	</div>
+	<div id="msg">已成功加入购物车！</div>
+	</div>
+	<script type="text/javascript">
+	$(function (){
+		var html;
+		$.ajax({
+			url:'BookList',
+			data:{},
+			type:"GET",
+			success:function (data){
+				data=$.parseJSON(data);
+				console.log(data);
+				for (var i = 0; i < data.data.length; i++) {
+					html='<div class="box" style="padding-top:5px;margin-top:60px;" height="400px">'
+						+data.data[i].img
+						+'<h4>¥<span>'+data.data[i].price+'</span></h4>'
+						+'<p>&nbsp;&nbsp;&nbsp;'+data.data[i].name+'<br/>'+data.data[i].content+'</p>'
+						+'<a href="#" class="button orange addcar">加入购物车</a>'
+						+'</div>';
+					$('#demo').append(html);
+				}
+				
+			}
+		})
+
+	})
+	
+</script>
+</body>
 </html>

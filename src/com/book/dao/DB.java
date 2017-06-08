@@ -63,6 +63,7 @@ public class DB {
 				e.printStackTrace();
 			}
 		}
+		System.out.println(sql);
 		pstt = conn.prepareStatement(sql);
 		for (int i = 0; i < paras.length; i++) {
 			pstt.setObject(i + 1, paras[i]);
