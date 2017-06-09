@@ -43,6 +43,8 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		DB dbq =new DB();
+		DB db =new DB();
 		try {
 			response.setHeader("Content-type","text/html;charset=UTF-8");
 			String username = request.getParameter("username");
@@ -50,22 +52,21 @@ public class Login extends HttpServlet {
 			String password = dm5.getMD5ofStr(request.getParameter("password"));
 			
 			String sql = "select * from user where name = ?";
-			DB db =new DB();
+			
 			ResultSet rs = db.executeQuery(sql, username);
 			if(rs.next()==false){
 				response.getWriter().append("沒有该用戶，請註冊！");
 				return ;
 			}else{
 				String sql1 = "select * from user where name = ? and password = ?";
-				DB dbq =new DB();
+				
 				ResultSet rs1 = db.executeQuery(sql1,username,password);
 				if(rs1.next()==false){
 					response.getWriter().append("密码输入错误，请重新输入！");
 					return ;
-				}
-				
+				}				
 				HttpSession sess=request.getSession();
-				sess.setAttribute("LoginUser", username);
+				sess.setAttribute("LoginUser", rs1.getString("id"));
 				request.setAttribute("msg", "登录成功");
 				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
@@ -74,6 +75,9 @@ public class Login extends HttpServlet {
 			e.printStackTrace();
 			request.setAttribute("msg", "登录失败"+e.getMessage());
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		}finally {
+			dbq.close();
+			db.close();
 		}
 	}
 

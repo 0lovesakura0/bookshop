@@ -26,6 +26,7 @@ public class Registered extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		DB db = new DB();
 		try {
 			resp.setHeader("Content-type", "text/html;charset=UTF-8");
 //			resp.getWriter().append("这是注册请求");
@@ -33,7 +34,7 @@ public class Registered extends HttpServlet {
 			MD5 md5 = new MD5();
 			String password = md5.getMD5ofStr(req.getParameter("password"));
 			String sql = "INSERT INTO USER(NAME,PASSWORD) VALUES(?,?)";
-			DB db = new DB();
+			
 			db.executeUpdate(sql, userName, password);
 			String json="{\"success\":true,\"msg\"：\"注册成功\"}";
 			req.setAttribute("msg", "注册成功");
@@ -43,7 +44,9 @@ public class Registered extends HttpServlet {
 			e.printStackTrace();
 			req.setAttribute("msg", "注册失败"+e.getMessage());
 			req.getRequestDispatcher("/index.jsp").forward(req, resp);
-		} 
+		} finally {
+			db.close();
+		}
 
 	}
 }

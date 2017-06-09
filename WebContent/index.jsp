@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>jQuery实现加入购物车飞入动画效果</title>
+<title>书城首页</title>
 <style type="text/css">
 .demo {
 	width: 820px;
@@ -161,48 +161,92 @@
 <script src="requestAnimationFrame.js"></script>
 <![endif]-->
 <script>
-$(function() {
-	var offset = $("#end").offset();  //结束的地方的元素
-	$(".addcar").click(function(event){   //是$(".addcar")这个元素点击促发的 开始动画的位置就是这个元素的位置为起点
-		var addcar = $(this);
-		var img = addcar.parent().find('img').attr('src');
-		var flyer = $('<img class="u-flyer" src="'+img+'">');
-		flyer.fly({
-			start: {
-				left: event.pageX,
-				top: event.pageY
-			},
-			end: {
-				left: offset.left+10,
-				top: offset.top+10,
-				width: 0,
-				height: 0
-			},
-			onEnd: function(){
-				$("#msg").show().animate({width: '250px'}, 200).fadeOut(1000);
-				addcar.css("cursor","default").removeClass('orange').unbind('click');
-				this.destory();
-			}
-		});
+	function init() {
+		var offset = $("#end").offset(); //结束的地方的元素
+		$(".addcar").click(
+				function(event) { //是$(".addcar")这个元素点击促发的 开始动画的位置就是这个元素的位置为起点
+					var addcar = $(this);
+					var img = addcar.parent().find('img').attr('src');
+					var flyer = $('<img class="u-flyer" src="'+img+'">');
+					flyer.fly({
+						start : {
+							left : event.pageX,
+							top : event.pageY
+						},
+						end : {
+							left : offset.left + 10,
+							top : offset.top + 10,
+							width : 0,
+							height : 0
+						},
+						onEnd : function() {
+							$("#msg").show().animate({
+								width : '250px'
+							}, 200).fadeOut(1000);
+							addcar.css("cursor", "default").removeClass(
+									'orange').unbind('click');
+							this.destory();
+						}
+					});
+					$.ajax({
+						url : 'AddShopCar',
+						type : "POST",
+						data : {bookId:addcar.attr('id')},
+						success:function(data){
+							data = $.parseJSON(data);
+							if (!data.success) {
+								alert(data.msg);
+							}
+						}
+					})
+				});
+	}
+	$(function() {
+
+		var html;
+		$
+				.ajax({
+					url : 'BookList',
+					data : {},
+					type : "GET",
+					success : function(data) {
+						data = $.parseJSON(data);
+						for (var i = 0; i < data.data.length; i++) {
+							html = '<div class="box" style="padding-top:5px;margin-top:60px;" height="400px">'
+									+ data.data[i].img
+									+ '<h4>¥<span>'
+									+ data.data[i].price
+									+ '</span></h4>'
+									+ '<p>&nbsp;&nbsp;&nbsp;'
+									+ data.data[i].name
+									+ '<br/>'
+									+ data.data[i].content
+									+ '</p>'
+									+ '<a href="#" id="'+data.data[i].id+'" class="button orange addcar">加入购物车</a>'
+									+ '</div>';
+							$('#demo').append(html);
+						}
+						init();
+					}
+				})
+
 	});
-  
-});
 </script>
 </head>
 
 <body>
 	<div id="main">
 		<h2 class="top_title">书城首页</h2>
-		<div class="demo" id='demo' style="margin-top:-60px">
-			 <div class="box" style="padding-top:5px;margin-top:60px;" height="400px">
-				<img src="images/lg.jpg"  class="img" width="180" height="180">
+		<div class="demo" id='demo' style="margin-top: -60px">
+			<!--<div class="box" style="padding-top: 5px; margin-top: 60px;"
+				height="400px">
+				<img src="images/lg.jpg" class="img" width="180" height="180">
 				<h4>
 					¥<span>3499.00</span>
 				</h4>
 				<p>LG 49LF5400-CA 49寸IPS硬屏富贵招财铜钱设计</p>
 				<a href="#" class="button orange addcar">加入购物车</a>
 			</div>
-			<!--
 			<div class="box">
 				<img src="images/hs.jpg" class="img" width="180" height="180">
 				<h4>
@@ -238,31 +282,5 @@ $(function() {
 	</div>
 	<div id="msg">已成功加入购物车！</div>
 	</div>
-	<script type="text/javascript">
-	$(function (){
-		var html;
-		$.ajax({
-			url:'BookList',
-			data:{},
-			type:"GET",
-			success:function (data){
-				data=$.parseJSON(data);
-				console.log(data);
-				for (var i = 0; i < data.data.length; i++) {
-					html='<div class="box" style="padding-top:5px;margin-top:60px;" height="400px">'
-						+data.data[i].img
-						+'<h4>¥<span>'+data.data[i].price+'</span></h4>'
-						+'<p>&nbsp;&nbsp;&nbsp;'+data.data[i].name+'<br/>'+data.data[i].content+'</p>'
-						+'<a href="#" class="button orange addcar">加入购物车</a>'
-						+'</div>';
-					$('#demo').append(html);
-				}
-				
-			}
-		})
-
-	})
-	
-</script>
 </body>
 </html>
