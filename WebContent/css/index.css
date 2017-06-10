@@ -4,7 +4,6 @@ a{ text-decoration:none;}
 a:hover{ color:#e46432;}
 body{margin:auto; background:url(../images/bj.jpg);overflow-x:hidden;}
 
-
 /*****购物车*********/
 .gwc{ width:950px;overflow:hidden;}
 .gwc_tb1{ width:100%; border-top:5px solid #48b9e5; background:#d0e7fa; height:38px; margin-top:20px; overflow:hidden;}
@@ -32,6 +31,7 @@ body{margin:auto; background:url(../images/bj.jpg);overflow-x:hidden;}
 .tb3_td4{ width:110px;text-align:center;}
 .jz2{ width:100px; height:46px; line-height:46px; text-align:center; font-size:18px; color:#fff; background:#ee0000; display:block; float:right;}
 #jz1{font-size:18px;}
+/*download by www.sucaijiayuan.com*/
 
 
 

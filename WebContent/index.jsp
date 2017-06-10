@@ -277,7 +277,7 @@
 
 	<div class="m-sidebar">
 		<div class="cart">
-			<i id="end"></i> <span>购物车</span>
+			<i id="end"></i> <span><a href='shopcart1.jsp'>购物车</a></span>
 		</div>
 	</div>
 	<div id="msg">已成功加入购物车！</div>

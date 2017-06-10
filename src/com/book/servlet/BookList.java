@@ -35,11 +35,12 @@ public class BookList extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		DB db = new DB();
+		response.setHeader("Content-type", "text/html;charset=UTF-8");
 		try {
 			String name=request.getParameter("key");
 			String sql = "select * from book";
-			DB db = new DB();
+			
 			ResultSet rs = null;
 			if ("".equals(name) || null==name) {
 				rs = db.executeQuery(sql, new Object[0]);
@@ -69,6 +70,8 @@ public class BookList extends HttpServlet {
 			e.printStackTrace();
 			response.setHeader("Content-type", "text/html;charset=UTF-8");
 			response.getWriter().append("{\"success\":false,\"msg\":\""+e.getMessage()+"\"");
+		}finally {
+			db.close();
 		}
 	}
 

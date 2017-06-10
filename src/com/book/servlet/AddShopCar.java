@@ -24,7 +24,7 @@ public class AddShopCar extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(req, resp);
+		doPost(req, resp);
 	}
 
 	@Override

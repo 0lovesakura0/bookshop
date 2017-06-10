@@ -1,4 +1,5 @@
 /** jQuery Calculation Plug-in**/
+/*download by www.sucaijiayuan.com*/
 (function($) {
     var defaults = {reNumbers: /(-|-\$)?(\d+(,\d{3})*(\.\d{1,})?|\.\d{1,})/g, cleanseNumber: function (v) {
         return v.replace(/[^0-9.\-]/g, "");
