@@ -44,9 +44,9 @@ public class AddShopCar extends HttpServlet {
 
 			String sql="";
 
-			ResultSet rs = db.executeQuery("select * from shopcart where userid=? and bookid=?", id, bookId);
+			ResultSet rs = db.executeQuery("select * from shopcart where userid=? and orderId=0 and bookid=?", id, bookId);
 			if (rs.next()) {
-				sql = "update shopcart set number=? where userId=? and BookId=?";
+				sql = "update shopcart set number=? where userId=? and BookId=? and orderId=0";
 				int a = db.executeUpdate(sql, rs.getInt("number") + 1, id, bookId);
 			} else {
 				sql = "INSERT INTO shopcart (userId,BookId,number) VALUES(?,?,?)";

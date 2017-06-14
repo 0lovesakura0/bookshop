@@ -207,7 +207,7 @@
 		$
 				.ajax({
 					url : 'BookList',
-					data : {},
+					data : {key:$('#key').val()},
 					type : "GET",
 					success : function(data) {
 						data = $.parseJSON(data);
@@ -231,13 +231,58 @@
 				})
 
 	});
+	function sub(){
+		$.ajax({
+			url:'BookList',
+			type:'POST',
+			data:{key:$('#key').val(),type:$('#type').val()},
+			success:function(data){
+				data = $.parseJSON(data);
+				$('#demo').html("");
+				if (!data.success) {
+					alert(data.msg);
+				}else{
+					for (var i = 0; i < data.data.length; i++) {
+						html = '<div class="box" style="padding-top:5px;margin-top:60px;" height="400px">'
+								+ data.data[i].img
+								+ '<h4>¥<span>'
+								+ data.data[i].price
+								+ '</span></h4>'
+								+ '<p>&nbsp;&nbsp;&nbsp;'
+								+ data.data[i].name
+								+ '<br/>'
+								+ data.data[i].content
+								+ '</p>'
+								+ '<a href="#" id="'+data.data[i].id+'" class="button orange addcar">加入购物车</a>'
+								+ '</div>';
+						$('#demo').append(html);
+					}
+					init();
+					
+				}
+			}
+		})
+	}
 </script>
 </head>
 
 <body>
 	<div id="main">
 		<h2 class="top_title">书城首页</h2>
+		 
+		<div class="demo">
+		 	<input type="text" valeu="" id='key' name="key"/>
+			<select id='type'>
+				<option value="">请选择</option>
+				<option value="计算机">计算机</option>
+				<option value="政治">政治</option>
+				<option value="物理">物理</option>
+				<option value="小说">小说</option>
+			</select>
+			<button type="submit" onclick="sub()">查询</button>
+			<br/>
 		<div class="demo" id='demo' style="margin-top: -60px">
+			
 			<!--<div class="box" style="padding-top: 5px; margin-top: 60px;"
 				height="400px">
 				<img src="images/lg.jpg" class="img" width="180" height="180">

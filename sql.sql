@@ -35,6 +35,22 @@ CREATE TABLE `book` (
 
 insert  into `book`(`id`,`name`,`type`,`price`,`number`,`author`,`content`) values (1,'java编程思想','计算机','74.90',1,'sum','这本书很不错'),(2,'论毛泽东思想','政治','38.00',2,'毛泽东','这本书   还凑合'),(3,'狭义相对论','物理','85.00',3,'爱因斯坦','这本书你基本看不懂'),(4,'广义相对论','物理','89.00',4,'爱因斯坦','这本书你根本看不懂'),(5,'水浒传','小说','120.00',5,'施耐庵 ','少年不看水浒，老年不读三国'),(6,'哈利波特','小说','238.00',6,'哈利波特','The book is English book');
 
+/*Table structure for table `bookorder` */
+
+DROP TABLE IF EXISTS `bookorder`;
+
+CREATE TABLE `bookorder` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `userid` int(11) DEFAULT NULL,
+  `zong` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+
+/*Data for the table `bookorder` */
+
+insert  into `bookorder`(`id`,`time`,`userid`,`zong`) values (1,'2017-03-02 00:00:00',3,'2.00'),(14,'2017-06-10 19:49:00',3,'695.00'),(15,'2017-06-10 19:50:36',2,'74.00'),(16,'2017-06-10 20:51:05',2,'159.00'),(17,'2017-06-10 20:52:40',2,'159.00'),(18,'2017-06-10 20:55:12',2,'159.00'),(19,'2017-06-10 21:08:04',2,'38.00');
+
 /*Table structure for table `shopcart` */
 
 DROP TABLE IF EXISTS `shopcart`;
@@ -43,10 +59,14 @@ CREATE TABLE `shopcart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) DEFAULT NULL COMMENT '用户id',
   `BookId` int(11) DEFAULT NULL COMMENT '书籍编号',
+  `number` int(5) DEFAULT NULL COMMENT '数量',
+  `orderId` int(11) DEFAULT '0' COMMENT '0为购物车未结算状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 /*Data for the table `shopcart` */
+
+insert  into `shopcart`(`id`,`userId`,`BookId`,`number`,`orderId`) values (2,2,2,4,17),(3,2,3,3,1),(4,2,4,2,1),(5,2,5,2,1),(6,2,6,1,1),(7,2,NULL,1,1),(15,3,3,3,0),(16,3,2,3,0),(17,3,4,2,0),(18,3,1,2,0),(19,2,1,1,18),(20,2,3,1,18),(21,2,2,1,19);
 
 /*Table structure for table `user` */
 

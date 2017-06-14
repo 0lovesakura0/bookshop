@@ -3,6 +3,8 @@ package com.book.servlet;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
@@ -36,41 +38,56 @@ public class BookList extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		DB db = new DB();
+		List<Object> list = new ArrayList<>();
 		response.setHeader("Content-type", "text/html;charset=UTF-8");
 		try {
-			String name=request.getParameter("key");
-			String sql = "select * from book";
-			
+			String name = request.getParameter("key");
+			String type = request.getParameter("type");
+			String sql = "select * from book where 1=1 ";
+
 			ResultSet rs = null;
-			if ("".equals(name) || null==name) {
-				rs = db.executeQuery(sql, new Object[0]);
-			}else{
-				sql+="where name=? ";
-				rs = db.executeQuery(sql, name);
+			if (!"".equals(name) && null != name) {
+				sql += " and (name=? or author=? or number=?)";
+				list.add(name);
+				list.add(name);
+				list.add(name);
 			}
-			
+
+			if (!"".equals(type) && null != type) {
+				sql += " and type=? ";
+				list.add(type);
+			}
+			rs = db.executeQuery(sql, list.toArray());
 			String json = "{\"success\":true,\"data\":[";
+			boolean isok = false;
 			while (rs.next()) {
-				int a=new Random().nextInt(4);
-				String message="<h4>"+rs.getString("name")+"</h4>"
-						+ "作者："+rs.getString("author")+"<br/>"
-						+ "价格："+rs.getString("price");
+				isok = true;
+				int a = new Random().nextInt(4);
+				String message = "<h4>" + rs.getString("name") + "</h4>" + "作者：" + rs.getString("author") + "<br/>"
+						+ "价格：" + rs.getString("price");
 				json += "{\"id\":\"" + rs.getLong("id") + "\"," + "\"name\":\"" + rs.getString("name") + "\","
 						+ "\"price\":\"" + rs.getString("price") + "\",\"content\":\"" + rs.getString("content") + "\","
 						+ "\"number\":\"" + rs.getInt("number") + "\"," + "\"name\":\"" + rs.getString("name") + "\","
 						+ "\"author\":\"" + rs.getString("author") + "\"," + "\"type\":\"" + rs.getString("type")
-						+ "\",\"img\":\"<img src='img/book/"+(a+1)+".jpg'  class='img' width='180' height='180' />\",\"message\":\""+message+"\"},";
+						+ "\",\"img\":\"<img src='img/book/" + (a + 1)
+						+ ".jpg'  class='img' width='180' height='180' />\",\"message\":\"" + message + "\"},";
 			}
-			json = json.substring(0, json.length() - 1) + "]}";
-			response.setHeader("Content-type", "text/html;charset=UTF-8");
-			// TODO Auto-generated method stub
-			response.getWriter().append(json);
+			if (isok) {
+				json = json.substring(0, json.length() - 1) + "]}";
+				response.setHeader("Content-type", "text/html;charset=UTF-8");
+				// TODO Auto-generated method stub
+				response.getWriter().append(json);
+			} else {
+				response.setHeader("Content-type", "text/html;charset=UTF-8");
+				// TODO Auto-generated method stub
+				response.getWriter().append("{\"success\":false,\"msg\":\"暂无数据\"}");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			response.setHeader("Content-type", "text/html;charset=UTF-8");
-			response.getWriter().append("{\"success\":false,\"msg\":\""+e.getMessage()+"\"");
-		}finally {
+			response.getWriter().append("{\"success\":false,\"msg\":\"" + e.getMessage() + "\"}");
+		} finally {
 			db.close();
 		}
 	}
