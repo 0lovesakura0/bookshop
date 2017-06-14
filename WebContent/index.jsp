@@ -161,6 +161,9 @@
 <script src="requestAnimationFrame.js"></script>
 <![endif]-->
 <script>
+function loadUrl(id){
+	location.href='bookInfo?bookId='+id;
+}
 	function init() {
 		var offset = $("#end").offset(); //结束的地方的元素
 		$(".addcar").click(
@@ -212,7 +215,7 @@
 					success : function(data) {
 						data = $.parseJSON(data);
 						for (var i = 0; i < data.data.length; i++) {
-							html = '<div class="box" style="padding-top:5px;margin-top:60px;" height="400px">'
+							html = '<div class="box" onClick="loadUrl('+data.data[i].id+')"  style="padding-top:5px;margin-top:60px;" height="400px">'
 									+ data.data[i].img
 									+ '<h4>¥<span>'
 									+ data.data[i].price
@@ -263,6 +266,7 @@
 			}
 		})
 	}
+	
 </script>
 </head>
 

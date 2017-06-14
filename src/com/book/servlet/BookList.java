@@ -62,14 +62,14 @@ public class BookList extends HttpServlet {
 			boolean isok = false;
 			while (rs.next()) {
 				isok = true;
-				int a = new Random().nextInt(4);
+				Long a = rs.getLong("id");
 				String message = "<h4>" + rs.getString("name") + "</h4>" + "作者：" + rs.getString("author") + "<br/>"
 						+ "价格：" + rs.getString("price");
 				json += "{\"id\":\"" + rs.getLong("id") + "\"," + "\"name\":\"" + rs.getString("name") + "\","
 						+ "\"price\":\"" + rs.getString("price") + "\",\"content\":\"" + rs.getString("content") + "\","
 						+ "\"number\":\"" + rs.getInt("number") + "\"," + "\"name\":\"" + rs.getString("name") + "\","
 						+ "\"author\":\"" + rs.getString("author") + "\"," + "\"type\":\"" + rs.getString("type")
-						+ "\",\"img\":\"<img src='img/book/" + (a + 1)
+						+ "\",\"img\":\"<img src='img/book/" + a
 						+ ".jpg'  class='img' width='180' height='180' />\",\"message\":\"" + message + "\"},";
 			}
 			if (isok) {

@@ -21,13 +21,13 @@ public class Book {
 		return this.name;
 	}
 
-	private Long type;
+	private String type;
 
-	public void setType(Long type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
-	public Long getType() {
+	public String getType() {
 		return this.type;
 	}
 
