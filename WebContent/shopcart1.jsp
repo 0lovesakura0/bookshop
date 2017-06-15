@@ -7,7 +7,25 @@
 <title>购物车</title>
 <link href="css/index.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="js/jquery.1.4.2-min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style1.css">
+<link rel="stylesheet" type="text/css" href="css/css.css" />
 <script type="text/javascript" src="js/Calculation.js"></script>
+<link rel="stylesheet" type="text/css" href="css/common.css" />
+ <style type="text/css">
+            .input_tip{
+                font-size:16px;
+                height:18px;
+                padding:4px;
+                padding-left:22px;
+                transition: all 0.3s ease 0s;
+                -webkit-transition: all 0.5s ease-in-out 0s;
+            }
+            .focus_tip{color:#FF6600;background:url(images/tipv1.png) no-repeat 0 5px;}
+            .right_tip{color:#009828;background:url(images/tipv1.png) no-repeat 0 -20px;}
+            .error_tip{color:red;background:url(images/tipv1.png) no-repeat 0 -47px;}
+            .ajax_checking_tip{color:#009828;}
+            dt{margin:5px 0}
+        </style>
 <script type="text/javascript">
 	$(document).ready(function() {
 
@@ -133,7 +151,7 @@
 											+ '	<td class="tb2_td1"> </td>'
 											+ '	<td class="tb2_td2"><a href="#"><img src="'+data.data[i].img+'"/></a></td>'
 											+ '	<td class="tb2_td3"><a href="#">'
-											+ data.data[i].name+','+data.data[i].id
+											+ data.data[i].name 
 											+ '</a></td>'
 											+ '	<td class="tb1_td4">'
 											+ data.data[i].content
@@ -195,6 +213,119 @@
  -->
 		<!---商品加减算总数---->
 		<script type="text/javascript">
+		$(function() {
+			var region = $("#region");
+			var address = $("#address");
+			var number_this = $("#number_this");
+			var name = $("#name_");
+			var phone = $("#phone");
+			$("#sub_setID").click(function() {
+				var input_out = $(".input_style");
+				for (var i = 0; i <= input_out.length; i++) {
+					if ($(input_out[i]).val() == "") {
+						$(input_out[i]).css("border", "1px solid red");
+						
+						return false;
+					} else {
+						$(input_out[i]).css("border", "1px solid #cccccc");
+					}
+				}
+			});
+			var span_momey = $(".span_momey");
+			var b = 0;
+			for (var i = 0; i < span_momey.length; i++) {
+				b += parseFloat($(span_momey[i]).html());
+			}
+			var out_momey = $(".out_momey");
+			out_momey.html(b);
+			$(".shade_content").hide();
+			$(".shade").hide();
+			$('.nav_mini ul li').hover(function() {
+				$(this).find('.two_nav').show(100);
+			}, function() {
+				$(this).find('.two_nav').hide(100);
+			})
+			$('.left_nav').hover(function() {
+				$(this).find('.nav_mini').show(100);
+			}, function() {
+				$(this).find('.nav_mini').hide(100);
+			})
+			$('#jia').click(function() {
+				$('input[name=num]').val(parseInt($('input[name=num]').val()) + 1);
+			})
+			$('#jian').click(function() {
+				$('input[name=num]').val(parseInt($('input[name=num]').val()) - 1);
+			})
+			$('.Caddress .add_mi').click(function() {
+				$(this).css('background', 'url("images/mail_1.jpg") no-repeat').siblings('.add_mi').css('background', 'url("images/mail.jpg") no-repeat')
+			})
+		})
+		var x = Array();
+
+		function func(a, b) {
+			x[b] = a.html();
+			alert(x)
+			a.css('border', '2px solid #f00').siblings('.min_mx').css('border', '2px solid #ccc');
+		}
+
+		function onclick_close() {
+			var shade_content = $(".shade_content");
+			var shade = $(".shade");
+			if (confirm("确认关闭么！此操作不可恢复")) {
+				shade_content.hide();
+				shade.hide();
+			}
+		}
+
+		function onclick_open() {
+			$(".shade_content").show();
+			$(".shade").show();
+			var input_out = $(".input_style");
+			for (var i = 0; i <= input_out.length; i++) {
+				if ($(input_out[i]).val() != "") {
+					$(input_out[i]).val("");
+				}
+			}
+		}
+
+		function onclick_remove(r) {
+			if (confirm("确认删除么！此操作不可恢复")) {
+				var out_momey = $(".out_momey");
+				var input_val = $(r).parent().prev().children().eq(1).val();
+				var span_html = $(r).parent().prev().prev().children().html();
+				var out_add = parseFloat(input_val).toFixed(2) * parseFloat(span_html).toFixed(2);
+				var reduce = parseFloat(out_momey.html()).toFixed(2)- parseFloat(out_add).toFixed(2);
+				console.log(parseFloat(reduce).toFixed(2));
+				out_momey.text(parseFloat(reduce).toFixed(2))
+				$(r).parent().parent().remove();
+			}
+		}
+
+		function onclick_btnAdd(a) {
+			var out_momey = $(".out_momey");
+			var input_ = $(a).prev();
+			var input_val = $(a).prev().val();
+			var input_add = parseInt(input_val) + 1;
+			input_.val(input_add);
+			var btn_momey = parseFloat($(a).parent().prev().children().html());
+			var out_momey_float = parseFloat(out_momey.html()) + btn_momey;
+			out_momey.text(out_momey_float.toFixed(2));
+		}
+
+		function onclick_reduce(b) {
+			var out_momey = $(".out_momey");
+			var input_ = $(b).next();
+			var input_val = $(b).next().val();
+			if (input_val <= 1) {
+				alert("商品个数不能小于1！")
+			} else {
+				var input_add = parseInt(input_val) - 1;
+				input_.val(input_add);
+				var btn_momey = parseFloat($(b).parent().prev().children().html());
+				var out_momey_float = parseFloat(out_momey.html()) - btn_momey;
+				out_momey.text(out_momey_float.toFixed(2));
+			}
+		}
 			function setTotal() {
 				var totle = 0;
 				for (var i = 0; i < totleCount; i++) {
@@ -218,32 +349,12 @@
 							alert(data.msg);
 					//		return;
 					//	}
-						//location.href="shopcart2.jsp";
+						location.href="shopcart2.jsp";
 					}
 					
 				})
 			}
-		</script>
-		<!-- <table cellpadding="0" cellspacing="0" class="gwc_tb2">
-			<tr>
-				<td class="tb2_td1"><input type="checkbox" value="1"
-					name="newslist" id="newslist-2" /></td>
-				<td class="tb2_td2"><a href="#"><img src="images/img2.jpg" /></a></td>
-				<td class="tb2_td3"><a href="#">产品标题</a></td>
-				<td class="tb1_td4">一件</td>
-				<td class="tb1_td5"><input id="min2" name=""
-					style="width: 20px; height: 18px; border: 1px solid #ccc;"
-					type="button" value="-" /> <input id="text_box2" name=""
-					type="text" value="1"
-					style="width: 30px; text-align: center; border: 1px solid #ccc;" />
-					<input id="add2" name=""
-					style="width: 20px; height: 18px; border: 1px solid #ccc;"
-					type="button" value="+" /></td>
-				<td class="tb1_td6"><label id="total2" class="tot"
-					style="color: #ff5500; font-size: 14px; font-weight: bold;"></label></td>
-				<td class="tb1_td7"><a href="#">删除</a></td>
-			</tr>
-		</table> -->
+		</script> 
  
 		<table cellpadding="0" cellspacing="0" class="gwc_tb3">
 			<tr>
@@ -256,10 +367,50 @@
 					style="color: #ff5500;"><label id="zong1"
 						style="color: #ff5500; font-size: 14px; font-weight: bold;"></label></span></td>
 				<td class="tb3_td4"> <a	href="#jz2" style="display: none;"
-					class="jz2" id="jz2" onclick="jiesuan()">结算</a></td>
+					class="jz2" id="jz2" onclick="onclick_open()">结算</a></td>
+		 
 			</tr>
 		</table>
 
 	</div>
+	<div class="shade_content">
+			<div class="col-xs-12 shade_colse">
+				<button onclick="javascript:onclick_close();">x</button>
+			</div>
+			<div class="nav shade_content_div">
+				<div class="col-xs-12 shade_title">
+					新增收货地址
+				</div>
+				<div class="col-xs-12 shade_from">
+					<!-- <form action="" method="post"> -->
+						<div class="col-xs-12">
+							<span class="span_style" id="">地&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;区</span>
+							<input class="input_style" type="" name="" id="region" value="" placeholder="&nbsp;&nbsp;请输入您的所在地区" />
+						</div>
+						<div class="col-xs-12">
+							<span class="span_style" id="">详细地址</span>
+							<input class="input_style" type="" name="" id="address" value="" placeholder="&nbsp;&nbsp;请输入您的详细地址" />
+						</div>
+						<div class="col-xs-12">
+							<span class="span_style" id="">邮政编号</span>
+							<input class="input_style" type="" name="" id="number_this" value="" placeholder="&nbsp;&nbsp;请输入您的邮政编号" />
+						</div>
+						<div class="col-xs-12">
+							<span class="span_style" class="span_sty" id="">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</span>
+							<input class="input_style" type="" name="" id="name_" value="" placeholder="&nbsp;&nbsp;请输入您的姓名" />
+						</div>
+						<div class="col-xs-12">
+							<span class="span_style" id="">手机号码</span>
+							<input class="input_style" type="" name="" id="phone" value="" placeholder="&nbsp;&nbsp;请输入您的手机号码" />
+						</div>
+						<div class="col-xs-12">
+							<input class="btn_remove" type="button" id="" onclick="javascript:onclick_close();" value="取消" />
+							<input type="button" class="sub_set" id="sub_setID" onclick="jiesuan()" value="提交" />
+						</div>
+					<!-- </form> -->
+				</div>
+			</div>
+		</div>
+	
 </body>
 </html>

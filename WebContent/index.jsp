@@ -215,8 +215,8 @@ function loadUrl(id){
 					success : function(data) {
 						data = $.parseJSON(data);
 						for (var i = 0; i < data.data.length; i++) {
-							html = '<div class="box" onClick="loadUrl('+data.data[i].id+')"  style="padding-top:5px;margin-top:60px;" height="400px">'
-									+ data.data[i].img
+							html = '<div class="box" style="padding-top:5px;margin-top:60px;" height="400px">'
+									+ '<div  onClick="loadUrl('+data.data[i].id+')" >'+data.data[i].img
 									+ '<h4>¥<span>'
 									+ data.data[i].price
 									+ '</span></h4>'
@@ -224,7 +224,7 @@ function loadUrl(id){
 									+ data.data[i].name
 									+ '<br/>'
 									+ data.data[i].content
-									+ '</p>'
+									+ '</p></div>'
 									+ '<a href="#" id="'+data.data[i].id+'" class="button orange addcar">加入购物车</a>'
 									+ '</div>';
 							$('#demo').append(html);

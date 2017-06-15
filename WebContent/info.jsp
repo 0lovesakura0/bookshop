@@ -31,8 +31,7 @@
   });
   
   function addcar(){
-	  alert(111);
-  
+	  
 		$.ajax({
 			url : 'AddShopCar',
 			type : "POST",
